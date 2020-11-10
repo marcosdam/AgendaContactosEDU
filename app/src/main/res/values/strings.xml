@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">AgendaContactosEDU</string>
+    <string-array name="spinner_direcciones">
+        <item>Selecciona Tipo</item>
+        <item>Casas</item>
+        <item>Trabajo</item>
+        <item>Vacaciones</item>
+        <item>Otros</item>
+    </string-array>
+    <string-array name="spinner_telefonos">
+        <item>Selecciona Tipo</item>
+        <item>Teléfono</item>
+        <item>Móvil</item>
+        <item>FAX</item>
+        <item>Otros</item>
+    </string-array>
+</resources>
