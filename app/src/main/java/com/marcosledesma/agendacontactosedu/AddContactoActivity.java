@@ -23,6 +23,9 @@ import com.marcosledesma.agendacontactosedu.modelos.Contacto;
 import com.marcosledesma.agendacontactosedu.modelos.Direccion;
 import com.marcosledesma.agendacontactosedu.modelos.Telefono;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class AddContactoActivity extends AppCompatActivity {
 
     private EditText txtNombre, txtApellidos, txtEmpresa;
@@ -32,7 +35,7 @@ public class AddContactoActivity extends AppCompatActivity {
     private Button btnAgregar;
 
     ArrayAdapter<String> adapterDirecciones;
-    String[] tiposDireccion;
+    ArrayList<String> tiposDireccion;
     FirebaseDatabase database;
     DatabaseReference refTiposDirecciones;
 
@@ -45,13 +48,13 @@ public class AddContactoActivity extends AppCompatActivity {
         database = FirebaseDatabase.getInstance();
         refTiposDirecciones = database.getReference("tiposDirecciones");
 
-        tiposDireccion = getResources().getStringArray(R.array.spinner_direcciones);
+        tiposDireccion.addAll(Arrays.asList(getResources().getStringArray(R.array.spinner_direcciones)));
         refTiposDirecciones.setValue(tiposDireccion);
         refTiposDirecciones.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()){
-                    GenericTypeIndicator<String[]> gtiTiposDirecciones = new GenericTypeIndicator<String[]>() {};
+                    GenericTypeIndicator<ArrayList<String>> gtiTiposDirecciones = new GenericTypeIndicator<ArrayList<String>>() {};
                     tiposDireccion = snapshot.getValue(gtiTiposDirecciones);
                     adapterDirecciones = new ArrayAdapter<String>(AddContactoActivity.this,
                             android.R.layout.simple_spinner_dropdown_item, tiposDireccion);
