@@ -1,16 +1,24 @@
 package com.marcosledesma.agendacontactosedu;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
+import com.google.firebase.database.ValueEventListener;
 import com.marcosledesma.agendacontactosedu.modelos.Contacto;
 import com.marcosledesma.agendacontactosedu.modelos.Direccion;
 import com.marcosledesma.agendacontactosedu.modelos.Telefono;
@@ -23,20 +31,52 @@ public class AddContactoActivity extends AppCompatActivity {
     private Spinner spTipoDireccion, spTipoTelefono;
     private Button btnAgregar;
 
+    ArrayAdapter<String> adapterDirecciones;
+    String[] tiposDireccion;
+    FirebaseDatabase database;
+    DatabaseReference refTiposDirecciones;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_contacto);
+
         inicializaInterfaz();
+        database = FirebaseDatabase.getInstance();
+
+        tiposDireccion = getResources().getStringArray(R.array.spinner_direcciones);
+        refTiposDirecciones.setValue(tiposDireccion);
+        refTiposDirecciones.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()){
+                    GenericTypeIndicator<String[]> gtiTiposDirecciones = new GenericTypeIndicator<String[]>() {};
+                    tiposDireccion = snapshot.getValue(gtiTiposDirecciones);
+                    adapterDirecciones = new ArrayAdapter<String>(AddContactoActivity.this,
+                            android.R.layout.simple_spinner_dropdown_item, tiposDireccion);
+                    spTipoDireccion.setAdapter(adapterDirecciones);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        adapterDirecciones = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_dropdown_item, tiposDireccion);
+        spTipoDireccion.setAdapter(adapterDirecciones);
+
 
         spTipoDireccion.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 //
                 int ultimoIndice = parent.getCount() - 1;
-                if (position == ultimoIndice){
+                if (position == ultimoIndice) {
                     txtNombreDir.setVisibility(View.VISIBLE);
-                }else{
+                } else {
                     txtNombreDir.setVisibility(View.GONE);
                 }
             }
@@ -52,9 +92,9 @@ public class AddContactoActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 // Lo mismo
                 int ultimoIndice = parent.getCount() - 1;
-                if (position == ultimoIndice){
+                if (position == ultimoIndice) {
                     txtNombreTel.setVisibility(View.VISIBLE);
-                }else{
+                } else {
                     txtNombreTel.setVisibility(View.GONE);
                 }
             }
@@ -68,30 +108,30 @@ public class AddContactoActivity extends AppCompatActivity {
         btnAgregar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!txtNombre.getText().toString().isEmpty() &&
-                   !txtApellidos.getText().toString().isEmpty() &&
-                   !txtCalle.getText().toString().isEmpty() &&
-                   !txtNumTelefono.getText().toString().isEmpty() &&
-                   spTipoDireccion.getSelectedItemPosition() != 0 &&
-                   spTipoTelefono.getSelectedItemPosition() != 0){
+                if (!txtNombre.getText().toString().isEmpty() &&
+                        !txtApellidos.getText().toString().isEmpty() &&
+                        !txtCalle.getText().toString().isEmpty() &&
+                        !txtNumTelefono.getText().toString().isEmpty() &&
+                        spTipoDireccion.getSelectedItemPosition() != 0 &&
+                        spTipoTelefono.getSelectedItemPosition() != 0) {
 
-                    if(txtNumero.getText().toString().isEmpty()){
+                    if (txtNumero.getText().toString().isEmpty()) {
                         txtNumero.setText("0");
                     }
 
                     String tipoTelefono;
-                    if(txtNombreTel.getVisibility() == View.VISIBLE){
+                    if (txtNombreTel.getVisibility() == View.VISIBLE) {
                         tipoTelefono = txtNombreTel.getText().toString();
-                    }else{
-                        tipoTelefono = (String)spTipoTelefono.getSelectedItem();
+                    } else {
+                        tipoTelefono = (String) spTipoTelefono.getSelectedItem();
                     }
                     Telefono telefono = new Telefono(tipoTelefono, txtNumTelefono.getText().toString());
 
                     String tipoDireccion;
-                    if (txtNombreDir.getVisibility() == View.VISIBLE){
+                    if (txtNombreDir.getVisibility() == View.VISIBLE) {
                         tipoDireccion = txtNombreDir.getText().toString();
-                    }else{
-                        tipoDireccion = (String)spTipoDireccion.getSelectedItem();
+                    } else {
+                        tipoDireccion = (String) spTipoDireccion.getSelectedItem();
                     }
                     Direccion direccion = new Direccion(tipoDireccion,
                             txtCalle.getText().toString(),
@@ -112,8 +152,7 @@ public class AddContactoActivity extends AppCompatActivity {
                     intent.putExtras(bundle);
                     setResult(RESULT_OK, intent);
                     finish();
-                }
-                else{
+                } else {
                     Toast.makeText(AddContactoActivity.this, "ALGO TE FALTA PENDEJO", Toast.LENGTH_SHORT).show();
                 }
             }
