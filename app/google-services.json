@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1056073395928",
+    "project_id": "agenda-contactos-con-firebase",
+    "storage_bucket": "agenda-contactos-con-firebase.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1056073395928:android:bffe6eedb61af2d11231ad",
+        "android_client_info": {
+          "package_name": "com.marcosledesma.agendacontactosedu"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1056073395928-s0694s4ghim79qb9kg6p1d1dqu9bcn29.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD4jc2xv3E8aGgs1yGmZkeT-TiSlqXafcY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1056073395928-s0694s4ghim79qb9kg6p1d1dqu9bcn29.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
