@@ -48,6 +48,7 @@ public class AddContactoActivity extends AppCompatActivity {
         database = FirebaseDatabase.getInstance();
         refTiposDirecciones = database.getReference("tiposDirecciones");
 
+        tiposDireccion = new ArrayList<>();
         tiposDireccion.addAll(Arrays.asList(getResources().getStringArray(R.array.spinner_direcciones)));
         refTiposDirecciones.setValue(tiposDireccion);
         refTiposDirecciones.addValueEventListener(new ValueEventListener() {
